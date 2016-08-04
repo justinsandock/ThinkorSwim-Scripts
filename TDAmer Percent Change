@@ -1,0 +1,19 @@
+declare lower;
+
+input hiAlert = 0;
+input length = 14;
+input loAlert = 0;
+input price = close;
+
+assert(length > 0, "'length' must be positive: " + length);
+
+plot PercentChg = 100 * (price / price[length] - 1);
+plot pHiAlert = hiAlert;
+plot pLoAlert = loAlert;
+
+PercentChg.DefineColor("HiAlert", GetColor(5));
+PercentChg.DefineColor("Normal", GetColor(7));
+PercentChg.DefineColor("LoAlert", GetColor(1));
+PercentChg.AssignValueColor(if PercentChg > hiAlert then PercentChg.color("HiAlert") else if PercentChg < loAlert then PercentChg.color("LoAlert") else PercentChg.color("Normal"));
+pHiAlert.SetDefaultColor(GetColor(8));
+pLoAlert.SetDefaultColor(GetColor(8));
