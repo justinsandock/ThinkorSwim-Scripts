@@ -1,32 +1,20 @@
 # Argon's Yeild Correlation (Percent Change Correlation)
-# r is the Pearson's Correlation
-# r = covariance of variables divided by product of their standard deviations
-
-# Covariance(IDataHolder data1, IDataHolder data2, int length);
-# Correlation(IDataHolder data1, IDataHolder data2, int length);
-
+# Justin Sandock 2016
 # Correlation(%chg current symbol, %chg comparison symbol, int length);
 
-script YeildCorrelation {
-  input data1 = close;
-  input data2 = close;
-  input length = 12;
+script PercChg {       #creates script to pass percent change over length bars in place of price in correlation
+  input length = 1;
+  input price = close;
 
-input CorrelatedSymbol = "SPX";
-input Correlationlength = 10;
-input Yeildlength = 1;
+  assert(length > 0, "'YeildLength' must be positive: " + length);
 
-plot YeldCorrelation = Correlation(
+  plot PercentChg = 100 * (price / price[length] - 1);
 
-script correlationTS {
-    input data1 = close;
-    input data2 = close;
-    input length = 12;
-    plot CorrelationTS = Covariance(data1, data2, length) / ( StDev(data1, length) * StDev(data2, length) );
 }
 
-declare lower;
-input length = 10;
-input secondSymbol = "SPX";
-plot Correlation1 = Correlation(close, close(secondSymbol), length);
-plot Correlation2 = CorrelationTS(close, close(secondSymbol), length);
+input CorrelatedSymbol = "SPX";
+input CorrelationLength = 10;
+input YeildLength = 1;
+
+
+plot YeldCorrelation = Correlation(PercChg(YeildLength,close), PercChg(YeildLength,close(CorrelatedSymbol)), CorrelationLength);
