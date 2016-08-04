@@ -1,0 +1,26 @@
+#
+# TD Ameritrade IP Company, Inc. (c) 2007-2016
+#
+
+declare lower;
+
+input length = 130;
+input maxVolumeCutOff = 2.5;
+
+assert(maxVolumeCutOff > 0, "'max volume cut off' must be positive: " + maxVolumeCutOff);
+
+def cutOff = 0.2 * stdev(log(hlc3) - log(hlc3[1]), 30) * close;
+def hlcChange = hlc3 - hlc3[1];
+def avgVolume = Average(volume, 50)[1];
+def minVolume = Min(volume, avgVolume * maxVolumeCutOff);
+def dirVolume = if hlcChange > cutOff
+    then minVolume
+    else if hlcChange < -cutOff
+        then -minVolume
+        else 0;
+
+plot VFI = ExpAverage(sum(dirVolume, length) / avgVolume, 3);
+plot ZeroLine = 0;
+
+VFI.setDefaultColor(getColor(8));
+ZeroLine.setDefaultColor(getColor(8));
