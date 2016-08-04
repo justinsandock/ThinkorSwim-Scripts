@@ -1,0 +1,11 @@
+#
+# TD Ameritrade IP Company, Inc. (c) 2009-2016
+#
+
+declare lower;
+
+input length = 10;
+input correlationWithSecurity = "SPX";
+
+plot Correlation = correlation(close, close(correlationWithSecurity), length);
+Correlation.SetDefaultColor(GetColor(5));
