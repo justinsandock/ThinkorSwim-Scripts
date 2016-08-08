@@ -1,0 +1,26 @@
+#BUY this is the buy side of the strategy
+SEC2:=Security("C:\Metastock Data\METAS\XAU",C); ; # This sets the intermarket security to check against. Also where it is located on the users hard drive and to use the Close data.
+D1:=40; # This is the number of DAYS to measure divergence for on the primary etf (GLD in this case) this was determined experimentally.
+D2:=50; # Number of DAYS to measure divergence in intermarket ETF (for this it is XAU)
+D3:= STDEV(C, 200) / STDEV(SEC2,200) # (Standard Deviation of GLD(close) over 200 DAYS  / Standard Dev of XAU(close) over DAYS bars)
+
+LRSI:=LinRegSlope(SEC2,D2)/Abs(Ref(SEC2,-D2+1))*100 # Linear Regression Slope (LRS) of Intermarket (XAU) over 50 DASY divided by the Absolute close value of XAU 49 Bars ago times 100
+LRS:=LinRegSlope(C,D1)/Abs(Ref(C,-D1+1)*100 # LRS of GLD over 40 DAYS divided by absolute close of GLD 39 BARS ago, times 100
+
+# I think the Abs(Ref) in the above lines is trying to adjust for the differences in volatilities between the two securities? But how?
+
+DIV1:= (D3*LRSI-LRS)*100; # The divergence is found by subtracting the base security LRS from the intermarket.
+DIVERG:= MOV(DIV1, 3, E); # 3 bar xpoential Moving Average of DIV1
+
+IM:=(Mov(DIVERG - LLV(DIVERG,200),3,S) * 100) / (Mov(HHV(DIVERG,200) - LLV(DIVERG,200),3,s)); 
+# The three day Simple moving Ave of (DIVERG minus the Lowest Level of DIVERG over the last 200 days) Times 100
+# Divided by the three day simple moving Ave of (The Highest value of DIVERG over the 200 days Minues the Lowest value of DIVERG over the last 200days)
+
+DIVERG>0 AND ALERT(CROSS(70,IM),4) AND IM< REF(IM,-1) AND STOCH(5,3)>MOV(STOCH(5,3),3,s) AND ROC(SEC2,2,%)>0;
+
+#Buy when
+#  The 3 bar exp move avearge of the divergence is above 0
+#  And IM is greater than last bar
+#  And Stochastics of (5,3) are greater than the 3 day simple moving Ave of Stochastics (5,3)
+#  And ROC of Intermarket Security is greater than 0.
+
