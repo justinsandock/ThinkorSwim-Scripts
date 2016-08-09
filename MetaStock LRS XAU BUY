@@ -9,10 +9,11 @@ LRS:=LinRegSlope(C,D1)/Abs(Ref(C,-D1+1)*100 # LRS of GLD over 40 DAYS divided by
 
 # I think the Abs(Ref) in the above lines is trying to adjust for the differences in volatilities between the two securities? But how?
 
-DIV1:= (D3*LRSI-LRS)*100; # The divergence is found by subtracting the base security LRS from the intermarket.
+DIV1:= (D3*LRSI-LRS)*100; # The divergence is found by multiplying the ratio of standard deviation by the Intermarket Disparity Index
+# The Intermarket Disparity Index is found by subtracting the disparity index of the base security LRS from the intermarket disparity index.
 DIVERG:= MOV(DIV1, 3, E); # 3 bar xpoential Moving Average of DIV1
 
-IM:=(Mov(DIVERG - LLV(DIVERG,200),3,S) * 100) / (Mov(HHV(DIVERG,200) - LLV(DIVERG,200),3,s)); 
+IM:=(Mov(DIVERG - LLV(DIVERG,200),3,S) * 100) / (Mov(HHV(DIVERG,200) - LLV(DIVERG,200),3,s));  # INTERMARKET MOMENTUM OSCILLATOR pg 128
 # The three day Simple moving Ave of (DIVERG minus the Lowest Level of DIVERG over the last 200 days) Times 100
 # Divided by the three day simple moving Ave of (The Highest value of DIVERG over the 200 days Minues the Lowest value of DIVERG over the last 200days)
 
