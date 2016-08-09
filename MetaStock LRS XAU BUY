@@ -1,3 +1,5 @@
+# pg 307 / 324 of Intermarket Trading Strategies
+
 #BUY this is the buy side of the strategy
 SEC2:=Security("C:\Metastock Data\METAS\XAU",C); ; # This sets the intermarket security to check against. Also where it is located on the users hard drive and to use the Close data.
 D1:=40; # This is the number of DAYS to measure divergence for on the primary etf (GLD in this case) this was determined experimentally.
