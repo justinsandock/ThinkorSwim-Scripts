@@ -1,1 +1,9 @@
-#
+# Argon LRS Divergence - Single
+# Justin Sandock 2016
+
+input Intermark = "SPY"; # This is the intermarket to compare
+input UnderBars = 200; # Number of bars to measure the underlaying security
+input IntermarkBars = 200; # Number of bars to measure the intermarket security
+input PositiveCorr = yes; # Is the intermarket security possitively correlated?
+
+def RegCoef = if PpsitiveCorr then StDev(close,UnderBars)/StDev(
