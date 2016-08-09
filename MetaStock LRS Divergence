@@ -1,0 +1,14 @@
+# pg 298 / 315 of Intermarket Strategies
+
+D1:=Input("Days for DIVERG",1,200,15);
+D2:=Input("DIVERG Positive +1,-VE-1",-1,1,1); # D2 is a constant about coorelation. 1 is positive correlation, -1 is negative
+D3:=D2*Stdev(C,200)/Stdev(P,200); # D2 sets the correllation. D3 is ratio of standar deviation
+LRSI:=LinRegSlope(P,D1)/Abs(Ref(P,-D1+1))*100;
+LRS:=LinRegSlope(C,D1)/Abs(Ref(C,-D1+1))*100;
+DIVERG:=(D3*LRSI-LRS)*100;
+Mov(DIVERG,3,E);
+
+# The above only works when comparing securites at similar price levels. Otherwise use the below
+
+D3:=D2*Stdev(C,200)/Stdev(P,200)*Mov(P,200,S)/Mov(S,200,S); # This normalizes prices between securites used to find Regression Coefficient b
+# Regression Coefficient is Pearson's Correlation (r) times the ratio of standard deviation. pg 34 / 51
