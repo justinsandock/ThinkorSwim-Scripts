@@ -5,5 +5,14 @@ input Intermark = "SPY"; # This is the intermarket to compare
 input UnderBars = 200; # Number of bars to measure the underlaying security
 input IntermarkBars = 200; # Number of bars to measure the intermarket security
 input PositiveCorr = yes; # Is the intermarket security possitively correlated?
+input Price = close; 
 
-def RegCoef = if PpsitiveCorr then StDev(close,UnderBars)/StDev(
+def RegCoef = if PpsitiveCorr then StDev(Price,UnderBars)/StDev(Price(Intermark),IntermarkBars)*MovingAverage(S,Price,Underbars)/MovingAverage(S,Price(Intermark),IntermarkBars) 
+  else -1*StDev(Price,UnderBars)/StDev(Price(Intermark),IntermarkBars)*MovingAverage(S,Price,Underbars)/MovingAverage(S,Price(Intermark),IntermarkBars)
+# This is the Regression Coefficient (ratio of standard deviation) multiplied by a price normalization and set to positive or negative based on type of correlation
+
+def LRSI = Inertia(Price(Intermark),IntermarkBars)/Abs(Price(Intermark,IntermarkBars-1))*100;
+def LRS = Inertia(Price,UnderBars)/Abs(Price(,UnderBars-1))*100;
+
+def DIVERG = (RegCoef*LRSI-LRS)*100;
+def MovDiverg = (E, DIVERG, 3);
