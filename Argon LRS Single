@@ -1,43 +1,42 @@
 # Argon LRS Divergence - Single
 # Justin Sandock 2016
 
-input Intermark = "SPY"; # This is the intermarket to compare
-input UnderBars = 200; # Number of bars to measure the underlaying security
-input IntermarkBars = 200; # Number of bars to measure the intermarket security
+input RelationWithSecurity = "SPY"; # This is the intermarket to compare
+input UnderBars = 20; # Number of bars to measure the underlaying security
+input IntermarkBars = 20; # Number of bars to measure the intermarket security
 input PositiveCorr = yes; # Is the intermarket security possitively correlated?
-input Price = close; 
-
-def RegCoef = if PpsitiveCorr then StDev(Price,UnderBars)/StDev(Price(Intermark),IntermarkBars)*MovingAverage(S,Price,Underbars)/MovingAverage(S,Price(Intermark),IntermarkBars) 
-  else -1*StDev(Price,UnderBars)/StDev(Price(Intermark),IntermarkBars)*MovingAverage(S,Price,Underbars)/MovingAverage(S,Price(Intermark),IntermarkBars)
-# This is the Regression Coefficient (ratio of standard deviation) multiplied by a price normalization and set to positive or negative based on type of correlation
-
-def LRSI = Inertia(Price(Intermark),IntermarkBars)/Abs(Price(Intermark,IntermarkBars-1))*100;
-def LRS = Inertia(Price,UnderBars)/Abs(Price(,UnderBars-1))*100;
-
-def DIVERG = (RegCoef*LRSI-LRS)*100;
-def MovDiverg = MovingAverage(E, DIVERG, 3);
-
-###################################################
-
-# In TOS
-# Argon LRS Divergence - Single
-# Justin Sandock 2016
-
-input Intermark = "SPY"; # This is the intermarket to compare
-input UnderBars = 200; # Number of bars to measure the underlaying security
-input IntermarkBars = 200; # Number of bars to measure the intermarket security
-input PositiveCorr = yes; # Is the intermarket security possitively correlated?
-input Price = close; 
 
 
-def RegCoef = if PositiveCorr then StDev(Price,UnderBars)/StDev(Price(Intermark),IntermarkBars)*MovingAverage(S,Price,Underbars)/MovingAverage(S,Price(Intermark),IntermarkBars) else -1*StDev(Price,UnderBars)/StDev(Price(Intermark),IntermarkBars)*MovingAverage(S,Price,Underbars)/MovingAverage(S,Price(Intermark),IntermarkBars);
+def RegTest = if PositiveCorr then StDev(close,UnderBars)/StDev(close(RelationWithSecurity),IntermarkBars) else UnderBars;
+
+def RegCoef = if PositiveCorr then StDev(close(RelationWithSecurity),IntermarkBars)/StDev(close,UnderBars)*MovingAverage(AverageType.SIMPLE,close,UnderBars)/MovingAverage(AverageType.SIMPLE,close(RelationWithSecurity),IntermarkBars) else
+-1*StDev(close(RelationWithSecurity),IntermarkBars)/StDev(close,UnderBars)*MovingAverage(AverageType.SIMPLE,close,UnderBars)/MovingAverage(AverageType.SIMPLE,close(RelationWithSecurity),IntermarkBars);
+
+
 # This is the Regression Coefficient (ratio of standard deviation) multiplied by a price normalization and set to positive or negative based on type of correlation
 
 
-def LRSI = Inertia(Price(Intermark),IntermarkBars)/AbsValue(Price(Intermark,IntermarkBars-1))*100;
-def LRS = Inertia(Price,Underbars)/AbsValue(Price(symbol,UnderBars-1))*100;
+def LRSI = Inertia(close,underBars)/AbsValue(Close[UnderBars-1])*100;
+def LRS = Inertia(close(RelationWithSecurity),IntermarkBars)/AbsValue(Close(RelationWithSecurity)[IntermarkBars-1])*100;
 
 def DIVERG = (RegCoef*LRSI-LRS)*100;
 
+plot MovDIVERG = MovingAverage(averageType.EXPONENTIAL,DIVERG,3);
 
-plot MovDiverg = MovingAverage(E,DIVERG,3);
+MovDIVERG.SetDefaultColor(GetColor(9));
+
+#plot LRSIplot = Inertia(close,underBars);
+#plot Absplot = AbsValue(Close[UnderBars-20]);
+#plot Absplot2 = AbsValue(Close(RelationWithSecurity)[IntermarkBars-280])*100;
+
+
+
+#plot scan = close(RelationWithSecurity);
+#scan.SetDefaultColor(GetColor(5));
+#This is used to test the plotting
+
+#LRSIplot.SetDefaultColor(GetColor(0));
+#Reg.SetDefaultColor(GetColor(2));
+#Absplot.SetDefaultColor(GetColor(3));
+#Absplot2.SetDefaultColor(GetColor(4));
+#Scan.SetDefaultColor(GetColor(1));
