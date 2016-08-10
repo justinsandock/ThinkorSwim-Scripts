@@ -1,5 +1,8 @@
 # pg 298 / 315 of Intermarket Strategies
 
+# P refers to prices of the Underlaying Security
+# C refers to prices of the iNtermarket Security
+
 D1:=Input("Days for DIVERG",1,200,15);
 D2:=Input("DIVERG Positive +1,-VE-1",-1,1,1); # D2 is a constant about coorelation. 1 is positive correlation, -1 is negative
 D3:=D2*Stdev(C,200)/Stdev(P,200); # D2 sets the correllation. D3 is ratio of standar deviation
