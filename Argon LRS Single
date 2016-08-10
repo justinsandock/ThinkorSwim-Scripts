@@ -1,9 +1,9 @@
 # Argon LRS Divergence - Single
 # Justin Sandock 2016
 
-input RelationWithSecurity = "SPY"; # This is the intermarket to compare
-input UnderBars = 20; # Number of bars to measure the underlaying security
-input IntermarkBars = 20; # Number of bars to measure the intermarket security
+input RelationWithSecurity = "SPX"; # This is the intermarket to compare
+input UnderBars = 9; # Number of bars to measure the underlaying security
+input IntermarkBars = 9; # Number of bars to measure the intermarket security
 input PositiveCorr = yes; # Is the intermarket security possitively correlated?
 
 
