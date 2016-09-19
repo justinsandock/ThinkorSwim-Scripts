@@ -1,0 +1,13 @@
+# Argon Option Delta Scan
+#Justin Sandock 9/19/2016
+
+def PFac = 1; # Defined minimum mark up value
+
+
+# Get MarkC at current Delta
+# Get MarkL at $1 lower
+# Get difference of MarkC-MakrL. Is the difference higher than Delta * PFac?
+
+
+
+plot scan = iv_percentile > 50.0;
