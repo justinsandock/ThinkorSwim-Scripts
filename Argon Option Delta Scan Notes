@@ -1,0 +1,40 @@
+# Argon Option Delta Scan
+#Justin Sandock 9/19/2016
+
+input PFac = 1; # Defined minimum mark up value
+input StrikeDepth = 5; How deep OTM of options to check
+input price = close;
+
+# Get MarkC and Delta at current Strike
+# Get MarkL at lower Strike
+# Get MarkDif of MarkC-MakrL.
+# Get StrikeDif between strikes of MarkC and MarkL
+# Is MarkDif < Delta * StrikeDif * PFac?
+
+# Or get all OTM options for underlying and add to list like Option[0] to Option[n]
+# Then subtract Option[n+1] from Option [n] and compare difference with Delta * PFac
+
+def OpName[0] = GetATMOption();
+
+For n = 0 to StrikeDepth do
+  OpPrice[n] = GetValue(price, OpName[n])
+  OpName[n+1] = GetNextOTMOption(OpName[n])
+  StrikeDif = Get
+  
+For i = 0 to StrikeDepth do
+  If OpPrice[i] - OpPrice[i+1] > Delta(OpName[i]) * PFac then PRINT???
+  
+Plot Scan 
+
+# def OpCode = GetATMOption();
+# def MarkC = GetValue(price);
+
+Fold n = 0 to StrikeDepth with MarkL do MarkN(n) = GetNextOTMOption()
+
+
+
+plot scan = PFac < (fold n = 0 to length with s do s + getValue(price, n, length - 1)) / length;
+
+
+
+plot scan = iv_percentile > 50.0;
