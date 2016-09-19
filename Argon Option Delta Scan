@@ -1,0 +1,21 @@
+# Argon Option Delta Scan
+#Justin Sandock 9/19/2016
+
+#Use the TOS Option Filters to set Volume and Days to Exp
+
+# Looks for Options which can be sold for more than their Probability ITM.
+# The value of selling the Option is found by subtracting the next OTM option from the current.
+# The Probability ITM is approximated with the Option Delta.
+# Because options can be for $1, $0.50 or $2.50 etc the value is divided by the difference in strikes to assess risk.
+# Finally there is a Profit Factor so it can look for options giving a profit larger than a set ratio.
+
+def PFac = 1; # Defined minimum mark up value
+def price = close;
+def ITMMAX = 33;
+def ITMMin = 28; 
+
+plot scan = ((Close(symbol, price) - Close(GetNextOTMOption, price))
+ / (GetStrike() - GetStrike(GetNextOTMOption))) > (Delta() * PFac0);
+
+# AND ITMMAX > Delta() < ITMMin;
+
